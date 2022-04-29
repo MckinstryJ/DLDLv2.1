@@ -14,21 +14,15 @@ class Data:
         self.args = args
         transform_list = [
             transforms.Resize((args.height, args.width)),
-            # transforms.RandomChoice(
-            #     [transforms.RandomHorizontalFlip(),
-            #      transforms.RandomGrayscale(),
-            #      transforms.RandomRotation(20)
-            #      ]
-            # ),
             transforms.ToTensor(),
-            # transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ]
         transform = transforms.Compose(transform_list)
         self.train_dataset = Dataset(args, transform)
 
         if trans:
             for t in trans:
-                t_ = [
+                transform_list = [
                     transforms.Resize((args.height, args.width)),
                     transforms.RandomHorizontalFlip(p=0.4),
                     transforms.GaussianBlur(kernel_size=(5, 7), sigma=(0.1, 2.0)),
@@ -37,7 +31,8 @@ class Data:
                     transforms.ToTensor(),
                     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
                 ]
-                ds_ = Dataset(args, t_)
+                transform = transforms.Compose(transform_list)
+                ds_ = Dataset(args, transform)
                 self.train_dataset = ConcatDataset([self.train_dataset, ds_])
 
         self.train_loader = dataloader.DataLoader(self.train_dataset,
