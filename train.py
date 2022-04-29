@@ -56,9 +56,11 @@ def main(train, val):
         torch.save(model, './pretrained/{}.pt'.format(args.model_name))
         torch.save(model.state_dict(), './pretrained/{}_dict.pt'.format(args.model_name))
 
-    print('Train:')
-    print('Epoch = [{}] \t[MAE: {:.4f}]'.format(i + 1, running_loss / len(loader)))
-    test(args, val)
+        if (i + 1) % 5 == 0 or (i + 1) == args.epochs:
+            print('Train:')
+            print('Epoch = [{}] \t[MAE: {:.4f}]'.format(i + 1, running_loss / len(loader)))
+
+            test(args, val)
 
 
 if __name__ == '__main__':
@@ -74,7 +76,7 @@ if __name__ == '__main__':
     epsilon_ = [1e-8, 1e-7, 1e-6, 1e-5]
     gamma_ = [0.7, 0.8, 0.9, 0.95]
 
-    args.epochs = 10
+    args.epochs = 25
     for model_type in ['TinyAge']:
         args.model_name = model_type
         args.lr = lr_[0]
