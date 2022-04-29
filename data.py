@@ -6,25 +6,40 @@ import torch.nn.functional as F
 from torch.utils.data import dataset
 from torchvision.datasets.folder import default_loader
 from torchvision import transforms
-from torch.utils.data import dataloader
+from torch.utils.data import dataloader, ConcatDataset
 
 
 class Data:
-    def __init__(self, args):
+    def __init__(self, args, trans=None):
         self.args = args
         transform_list = [
             transforms.Resize((args.height, args.width)),
-            transforms.RandomChoice(
-                [transforms.RandomHorizontalFlip(),
-                 transforms.RandomGrayscale(),
-                 transforms.RandomRotation(20)
-                 ]
-            ),
+            # transforms.RandomChoice(
+            #     [transforms.RandomHorizontalFlip(),
+            #      transforms.RandomGrayscale(),
+            #      transforms.RandomRotation(20)
+            #      ]
+            # ),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            # transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ]
         transform = transforms.Compose(transform_list)
         self.train_dataset = Dataset(args, transform)
+
+        if trans:
+            for t in trans:
+                t_ = [
+                    transforms.Resize((args.height, args.width)),
+                    transforms.RandomHorizontalFlip(p=0.4),
+                    transforms.GaussianBlur(kernel_size=(5, 7), sigma=(0.1, 2.0)),
+                    transforms.RandomAdjustSharpness(sharpness_factor=2),
+                    transforms.RandomAutocontrast(),
+                    transforms.ToTensor(),
+                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+                ]
+                ds_ = Dataset(args, t_)
+                self.train_dataset = ConcatDataset([self.train_dataset, ds_])
+
         self.train_loader = dataloader.DataLoader(self.train_dataset,
                                                   shuffle=True,
                                                   batch_size=args.train_batch_size,

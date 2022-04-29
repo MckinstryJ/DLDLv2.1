@@ -67,23 +67,23 @@ if __name__ == '__main__':
 
     # Search field
     lr_ = [1e-4, 1e-3, 1e-2, 1e-1]
-    opt_ = ['SGD', 'ADAM', 'NADAM', 'RMSprop']
+    opt_ = ['SGD', 'ADAM', 'ADAMAX', 'RMSprop']
     mom_ = [0.85, 0.9, 0.95]
-    beta1_ = [0.85, 0.9, 0.95, 0.999]
-    beta2_ = [0.85, 0.9, 0.95, 0.999]
+    beta1_ = [0.75, 0.8, 0.85, 0.9, 0.95, 0.999]
+    beta2_ = [0.75, 0.8, 0.85, 0.9, 0.95, 0.999]
     epsilon_ = [1e-8, 1e-7, 1e-6, 1e-5]
     gamma_ = [0.7, 0.8, 0.9, 0.95]
 
     args.epochs = 10
-    for model_type in ['ThinAge']:
+    for model_type in ['TinyAge']:
         args.model_name = model_type
-        args.lr = lr_[1]
-        args.optimizer = opt_[0]
-        args.momentum = mom_[0]
-        args.beta1 = beta1_[0]
-        args.beta2 = beta2_[0]
-        args.epsilon = epsilon_[0]
-        args.gamma = gamma_[0]
+        args.lr = lr_[0]
+        args.optimizer = opt_[1]
+        args.momentum = mom_[1]
+        args.beta1 = beta1_[1]
+        args.beta2 = beta2_[2]
+        args.epsilon = epsilon_[2]
+        args.gamma = gamma_[1]
 
         utils.print_hyperparams(args)
         main(train, val)
