@@ -9,3 +9,7 @@ Follow steps to use this version:
 - place UTKFace dir into ./data
 
 After installing proper libs, you should be able to run run train.py / test.py via command line or IDE.
+
+Additions:
+- Augmented data on top of original
+- Expanded training example
